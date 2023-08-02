@@ -10582,7 +10582,7 @@ AnnounceMedkitPenalty(Mode = -1)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if (Mode)
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03ALL SURVIVORS \x01now earns only \x04%i percent \x01of their normal points after using their \x05%i%s Medkit%s\x01!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter, (MedkitsUsedCounter == 1 ? "st" : (MedkitsUsedCounter == 2 ? "nd" : (MedkitsUsedCounter == 3 ? "rd" : "th"))), (ServerVersion == Engine_Left4Dead ? "" : " or Defibrillator"));
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "所有幸存者在使用他们的\x05%i%s医疗包%s\x01后，现在只能获得\x04%i \x03幸存者 \x01的正常点数!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter, (MedkitsUsedCounter == 1 ? "st" : (MedkitsUsedCounter == 2 ? "nd" : (MedkitsUsedCounter == 3 ? "rd" : "th"))), (ServerVersion == Engine_Left4Dead ? "" : " or Defibrillator"));
 }
 
 GetClientInfectedType(Client)
@@ -10927,11 +10927,11 @@ public InitializeRankVote(client)
 		{
 			if (ServerVersion == Engine_Left4Dead)
 			{
-				StatsPrintToChatPreFormatted2(client, true, "The \x04Rank Vote \x01is enabled in \x03Versus \x01gamemode!");
+				StatsPrintToChatPreFormatted2(client, true, "\x04排名投票\x01启用 \x03Versus \x01gamemode!");
 			}
 			else
 			{
-				StatsPrintToChatPreFormatted2(client, true, "The \x04Rank Vote \x01is enabled in \x03Versus\x01, \x03Realism Versus \x01and \x03Scavenge \x01gamemodes!");
+				StatsPrintToChatPreFormatted2(client, true, "\x04排名投票\x01启用\x03Versus\x01, \x03Realism Versus \x01and \x03Scavenge \x01gamemodes!");
 			}
 		}
 
@@ -10946,7 +10946,7 @@ public InitializeRankVote(client)
 		}
 		else
 		{
-			PrintToConsole(client, "[RANK] The Rank Vote is already initiated!");
+			PrintToConsole(client, "[RANK] 排名投票已经开始！");
 		}
 
 		return;
@@ -10959,7 +10959,7 @@ public InitializeRankVote(client)
 
 	if (!IsAdmin && client > 0 && GetTrieValue(PlayerRankVoteTrie, ClientID, team))
 	{
-		StatsPrintToChatPreFormatted2(client, true, "You can initiate a \x04Rank Vote \x01only once per map!");
+		StatsPrintToChatPreFormatted2(client, true, "每张地图只能发起一次\x04Rank 投票 \x01!");
 		return;
 	}
 
