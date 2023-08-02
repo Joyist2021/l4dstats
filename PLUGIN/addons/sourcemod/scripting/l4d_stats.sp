@@ -75,10 +75,10 @@ char TM_MENU_CURRENT[4] = " <<";
 char DB_PLAYERS_TOTALPOINTS[1024] = "points + points_survivors + points_infected + points_realism + points_survival + points_scavenge_survivors + points_scavenge_infected + points_realism_survivors + points_realism_infected + points_mutations";
 char DB_PLAYERS_TOTALPLAYTIME[1024] = "playtime + playtime_versus + playtime_realism + playtime_survival + playtime_scavenge + playtime_realismversus + playtime_mutations";
 
-char RANKVOTE_QUESTION[128] = "Do you want to shuffle teams by player PPM?";
+char RANKVOTE_QUESTION[128] = "你想按照玩家 百万分比 来重新排列队伍吗？";
 
 // Message of the day
-char MOTD_TITLE[32] = "Message Of The Day";
+char MOTD_TITLE[32] = "每日消息";
 char MessageOfTheDay[1024];
 
 // Set to false when stats seem to work properly
@@ -444,115 +444,115 @@ public OnPluginStart()
 	cvar_SurvivorLimit = FindConVar("survivor_limit");
 	cvar_InfectedLimit = FindConVar("z_max_player_zombies");
 
-	// Administrative Cvars
-	cvar_AdminPlayerCleanLastOnTime = CreateConVar("l4d_stats_adm_cleanoldplayers", "2", "How many months old players (last online time) will be cleaned. 0 = Disabled", _, true, 0.0);
-	cvar_AdminPlayerCleanPlatime = CreateConVar("l4d_stats_adm_cleanplaytime", "30", "How many minutes of playtime to not get cleaned from stats. 0 = Disabled", _, true, 0.0);
+	// 管理Administrative Cvars
+	cvar_AdminPlayerCleanLastOnTime = CreateConVar("l4d_stats_adm_cleanoldplayers", "2", "将清理多少个月的老玩家（上次在线时间）。0 = 禁用", _, true, 0.0);
+	cvar_AdminPlayerCleanPlatime = CreateConVar("l4d_stats_adm_cleanplaytime", "30", "多少分钟的游戏时间不会被清除。0 = 禁用", _, true, 0.0);
 
-	// Config/control Cvars
-	cvar_EnableRankVote = CreateConVar("l4d_stats_enablerankvote", "1", "Enable voting of team shuffle by player PPM (Points Per Minute)", _, true, 0.0, true, 1.0);
-	cvar_HumansNeeded = CreateConVar("l4d_stats_minhumans", "2", "Minimum Human players before stats will be enabled", _, true, 1.0, true, 4.0);
-	cvar_UpdateRate = CreateConVar("l4d_stats_updaterate", "90", "Number of seconds between Common Infected point earn announcement/update", _, true, 30.0);
-	//cvar_AnnounceRankMinChange = CreateConVar("l4d_stats_announcerankminpoint", "500", "Minimum change to points before rank change announcement", _, true, 0.0);
-	cvar_AnnounceRankChange = CreateConVar("l4d_stats_announcerank", "1", "Chat announcment for rank change", _, true, 0.0, true, 1.0);
-	cvar_AnnounceRankChangeIVal = CreateConVar("l4d_stats_announcerankinterval", "60", "Rank change check interval", _, true, 10.0);
-	cvar_AnnouncePlayerJoined = CreateConVar("l4d_stats_announceplayerjoined", "1", "Chat announcment for player joined.", _, true, 0.0, true, 1.0);
-	cvar_AnnounceMotd = CreateConVar("l4d_stats_announcemotd", "1", "Chat announcment for the message of the day.", _, true, 0.0, true, 1.0);
-	cvar_AnnounceMode = CreateConVar("l4d_stats_announcemode", "1", "Chat announcment mode. 0 = Off, 1 = Player Only, 2 = Player Only w/ Public Headshots, 3 = All Public", _, true, 0.0, true, 3.0);
-	cvar_AnnounceToTeam = CreateConVar("l4d_stats_announceteam", "2", "Chat announcment team messages to the team only mode. 0 = Print messages to all teams, 1 = Print messages to own team only, 2 = Print messages to own team and spectators only", _, true, 0.0, true, 2.0);
-	//cvar_AnnounceSpecial = CreateConVar("l4d_stats_announcespecial", "1", "Chat announcment mode for special events. 0 = Off, 1 = Player Only, 2 = Print messages to all teams, 3 = Print messages to own team only, 4 = Print messages to own team and spectators only", _, true, 0.0, true, 4.0);
-	cvar_MedkitMode = CreateConVar("l4d_stats_medkitmode", "0", "Medkit point award mode. 0 = Based on amount healed, 1 = Static amount", _, true, 0.0, true, 1.0);
-	cvar_SiteURL = CreateConVar("l4d_stats_siteurl", "", "Community site URL, for rank panel display", _);
-	cvar_RankOnJoin = CreateConVar("l4d_stats_rankonjoin", "1", "Display player's rank when they connect. 0 = Disable, 1 = Enable", _, true, 0.0, true, 1.0);
-	cvar_SilenceChat = CreateConVar("l4d_stats_silencechat", "0", "Silence chat triggers. 0 = Show chat triggers, 1 = Silence chat triggers", _, true, 0.0, true, 1.0);
-	cvar_DisabledMessages = CreateConVar("l4d_stats_disabledmessages", "1", "Show 'Stats Disabled' messages, allow chat commands to work when stats disabled. 0 = Hide messages/disable chat, 1 = Show messages/allow chat", _, true, 0.0, true, 1.0);
-	//cvar_MaxPoints = CreateConVar("l4d_stats_maxpoints", "500", "Maximum number of points that can be earned in a single map. Normal = x1, Adv = x2, Expert = x3", _, true, 500.0);
-	cvar_DbPrefix = CreateConVar("l4d_stats_dbprefix", "", "Prefix for your stats tables", _);
-	//cvar_LeaderboardTime = CreateConVar("l4d_stats_leaderboardtime", "14", "Time in days to show Survival Leaderboard times", _, true, 1.0);
-	cvar_EnableNegativeScore = CreateConVar("l4d_stats_enablenegativescore", "1", "Enable point losses (negative score)", _, true, 0.0, true, 1.0);
-	cvar_FriendlyFireMode = CreateConVar("l4d_stats_ffire_mode", "2", "Friendly fire mode. 0 = Normal, 1 = Cooldown, 2 = Damage based", _, true, 0.0, true, 2.0);
-	cvar_FriendlyFireMultiplier = CreateConVar("l4d_stats_ffire_multiplier", "1.5", "Friendly fire damage multiplier (Formula: Score = Damage * Multiplier)", _, true, 0.0);
-	cvar_FriendlyFireCooldown = CreateConVar("l4d_stats_ffire_cooldown", "10.0", "Time in seconds for friendly fire cooldown", _, true, 1.0);
-	cvar_FriendlyFireCooldownMode = CreateConVar("l4d_stats_ffire_cooldownmode", "1", "Friendly fire cooldown mode. 0 = Disable, 1 = Player specific, 2 = General", _, true, 0.0, true, 2.0);
+	// 配置/控制 Config/control Cvars
+	cvar_EnableRankVote = CreateConVar("l4d_stats_enablerankvote", "1", "启用按玩家PPM进行队伍洗牌投票(每分钟点数)", _, true, 0.0, true, 1.0);
+	cvar_HumansNeeded = CreateConVar("l4d_stats_minhumans", "1", "启用统计数据之前的最少人类玩家", _, true, 1.0, true, 4.0);
+	cvar_UpdateRate = CreateConVar("l4d_stats_updaterate", "90", "普通感染点获得公告/更新之间的秒数", _, true, 30.0);
+	//cvar_AnnounceRankMinChange = CreateConVar("l4d_stats_announcerankminpoint", "500", "排名改变前的最低分数改变", _, true, 0.0);
+	cvar_AnnounceRankChange = CreateConVar("l4d_stats_announcerank", "1", "聊天排名变更公告", _, true, 0.0, true, 1.0);
+	cvar_AnnounceRankChangeIVal = CreateConVar("l4d_stats_announcerankinterval", "60", "排名变化检查间隔", _, true, 10.0);
+	cvar_AnnouncePlayerJoined = CreateConVar("l4d_stats_announceplayerjoined", "1", "玩家加入的聊天公告。", _, true, 0.0, true, 1.0);
+	cvar_AnnounceMotd = CreateConVar("l4d_stats_announcemotd", "1", "当天消息的聊天公告", _, true, 0.0, true, 1.0);
+	cvar_AnnounceMode = CreateConVar("l4d_stats_announcemode", "1", "聊天公告模式。0 = 关闭，1 = 仅玩家，2 = 仅玩家带公共头像，3 = 所有公共", _, true, 0.0, true, 3.0);
+	cvar_AnnounceToTeam = CreateConVar("l4d_stats_announceteam", "2", "仅向本队模式聊天公告球队消息。0 = 向所有球队打印消息，1 = 仅向本队打印消息，2 = 仅向本队和观众打印消息", _, true, 0.0, true, 2.0);
+	//cvar_AnnounceSpecial = CreateConVar("l4d_stats_announcespecial", "1", "特殊事件的聊天公告模式。0 = 关闭，1 = 仅玩家，2 = 向所有团队打印消息，3 = 仅向自己的团队打印消息，4 =仅向自己的球队和观众打印消息", _, true, 0.0, true, 4.0);
+	cvar_MedkitMode = CreateConVar("l4d_stats_medkitmode", "0", "医疗包积分奖励模式。0 =基于治疗量，1 =静态量", _, true, 0.0, true, 1.0);
+	cvar_SiteURL = CreateConVar("l4d_stats_siteurl", "https://l4d.775885995.xyz/l4d_stats/", "社区站点 URL，用于排名面板显示", _);
+	cvar_RankOnJoin = CreateConVar("l4d_stats_rankonjoin", "1", "连接时显示玩家的等级。0 = 禁用，1 = 启用", _, true, 0.0, true, 1.0);
+	cvar_SilenceChat = CreateConVar("l4d_stats_silencechat", "1", "静音聊天触发器。0 = 显示聊天触发器，1 = 静音聊天触发器", _, true, 0.0, true, 1.0);
+	cvar_DisabledMessages = CreateConVar("l4d_stats_disabledmessages", "0", "显示'统计禁用'消息，允许聊天命令在统计禁用时工作。0 = 隐藏消息/禁用聊天，1 = 显示消息/允许聊天", _, true, 0.0, true, 1.0);
+	//cvar_MaxPoints = CreateConVar("l4d_stats_maxpoints", "500", "单张地图中可以获得的最大点数。Normal = x1, Adv = x2, Expert = x3", _, true, 500.0);
+	cvar_DbPrefix = CreateConVar("l4d_stats_dbprefix", "", "统计表的前缀", _);
+	//cvar_LeaderboardTime = CreateConVar("l4d_stats_leaderboardtime", "14", "显示生存排行榜时间的天数", _, true, 1.0);
+	cvar_EnableNegativeScore = CreateConVar("l4d_stats_enablenegativescore", "1", "启用分数损失（负分）", _, true, 0.0, true, 1.0);
+	cvar_FriendlyFireMode = CreateConVar("l4d_stats_ffire_mode", "2", "友军开火模式。0 = 正常，1 = 冷却，2 = 基于伤害", _, true, 0.0, true, 2.0);
+	cvar_FriendlyFireMultiplier = CreateConVar("l4d_stats_ffire_multiplier", "1.5", "友军火力伤害倍数（公式：分数 = 伤害 * 倍数）", _, true, 0.0);
+	cvar_FriendlyFireCooldown = CreateConVar("l4d_stats_ffire_cooldown", "10.0", "友军火力冷却时间（以秒为单位）", _, true, 1.0);
+	cvar_FriendlyFireCooldownMode = CreateConVar("l4d_stats_ffire_cooldownmode", "1", "友军射击冷却模式。0 = 禁用, 1 = 特定于玩家, 2 = 常规", _, true, 0.0, true, 2.0);
 
-	// Game mode Cvars
-	cvar_Enable = CreateConVar("l4d_stats_enable", "1", "Enable/Disable all stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableCoop = CreateConVar("l4d_stats_enablecoop", "1", "Enable/Disable coop stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableSv = CreateConVar("l4d_stats_enablesv", "1", "Enable/Disable survival stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableVersus = CreateConVar("l4d_stats_enableversus", "1", "Enable/Disable versus stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableTeamVersus = CreateConVar("l4d_stats_enableteamversus", "1", "[L4D2] Enable/Disable team versus stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableRealism = CreateConVar("l4d_stats_enablerealism", "1", "[L4D2] Enable/Disable realism stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableScavenge = CreateConVar("l4d_stats_enablescavenge", "1", "[L4D2] Enable/Disable scavenge stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableTeamScavenge = CreateConVar("l4d_stats_enableteamscavenge", "1", "[L4D2] Enable/Disable team scavenge stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableRealismVersus = CreateConVar("l4d_stats_enablerealismvs", "1", "[L4D2] Enable/Disable realism versus stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableTeamRealismVersus = CreateConVar("l4d_stats_enableteamrealismvs", "1", "[L4D2] Enable/Disable team realism versus stat tracking", _, true, 0.0, true, 1.0);
-	cvar_EnableMutations = CreateConVar("l4d_stats_enablemutations", "1", "[L4D2] Enable/Disable mutations stat tracking", _, true, 0.0, true, 1.0);
+	// 游戏模式 Cvars
+	cvar_Enable = CreateConVar("l4d_stats_enable", "1", "启用/禁用所有统计", _, true, 0.0, true, 1.0);
+	cvar_EnableCoop = CreateConVar("l4d_stats_enablecoop", "1", "启用/禁用 coop 统计", _, true, 0.0, true, 1.0);
+	cvar_EnableSv = CreateConVar("l4d_stats_enablesv", "1", "启用/禁用Sv统计", _, true, 0.0, true, 1.0);
+	cvar_EnableVersus = CreateConVar("l4d_stats_enableversus", "1", "启用/禁用versus统计", _, true, 0.0, true, 1.0);
+	cvar_EnableTeamVersus = CreateConVar("l4d_stats_enableteamversus", "1", "[L4D2] 启用/禁用versus统计", _, true, 0.0, true, 1.0);
+	cvar_EnableRealism = CreateConVar("l4d_stats_enablerealism", "1", "[L4D2] 启用/禁用realism统计", _, true, 0.0, true, 1.0);
+	cvar_EnableScavenge = CreateConVar("l4d_stats_enablescavenge", "1", "[L4D2] 启用/禁用 scavenge统计", _, true, 0.0, true, 1.0);
+	cvar_EnableTeamScavenge = CreateConVar("l4d_stats_enableteamscavenge", "1", "[L4D2] 启用/禁用 团队scavenge统计", _, true, 0.0, true, 1.0);
+	cvar_EnableRealismVersus = CreateConVar("l4d_stats_enablerealismvs", "1", "[L4D2] 启用/禁用 写实versus 统计", _, true, 0.0, true, 1.0);
+	cvar_EnableTeamRealismVersus = CreateConVar("l4d_stats_enableteamrealismvs", "1", "[L4D2] 启用/禁用 团队写实versus 统计", _, true, 0.0, true, 1.0);
+	cvar_EnableMutations = CreateConVar("l4d_stats_enablemutations", "1", "[L4D2] 启用/禁用 突变mutations 统计", _, true, 0.0, true, 1.0);
 
-	// Game mode depended Cvars
-	cvar_RealismMultiplier = CreateConVar("l4d_stats_realismmultiplier", "1.4", "[L4D2] Realism score multiplier for coop score", _, true, 1.0);
-	cvar_RealismVersusSurMultiplier = CreateConVar("l4d_stats_realismvsmultiplier_s", "1.4", "[L4D2] Realism score multiplier for survivors versus score", _, true, 1.0);
-	cvar_RealismVersusInfMultiplier = CreateConVar("l4d_stats_realismvsmultiplier_i", "0.6", "[L4D2] Realism score multiplier for infected versus score", _, true, 0.0, true, 1.0);
+	// 游戏模式取决于Cvars
+	cvar_RealismMultiplier = CreateConVar("l4d_stats_realismmultiplier", "1.4", "[L4D2]写实得分乘数战役得分", _, true, 1.0);
+	cvar_RealismVersusSurMultiplier = CreateConVar("l4d_stats_realismvsmultiplier_s", "1.4", "[L4D2] 写实得分乘数幸存者versus得分", _, true, 1.0);
+	cvar_RealismVersusInfMultiplier = CreateConVar("l4d_stats_realismvsmultiplier_i", "0.6", "[L4D2] 写实得分乘数感染者versus得分", _, true, 0.0, true, 1.0);
 	cvar_EnableSvMedicPoints = CreateConVar("l4d_stats_medicpointssv", "0", "Survival medic points enabled", _, true, 0.0, true, 1.0);
 
-	// Infected point Cvars
-	cvar_Infected = CreateConVar("l4d_stats_infected", "1", "Base score for killing a Common Infected", _, true, 1.0);
-	cvar_Hunter = CreateConVar("l4d_stats_hunter", "2", "Base score for killing a Hunter", _, true, 1.0);
-	cvar_Smoker = CreateConVar("l4d_stats_smoker", "3", "Base score for killing a Smoker", _, true, 1.0);
-	cvar_Boomer = CreateConVar("l4d_stats_boomer", "5", "Base score for killing a Boomer", _, true, 1.0);
-	cvar_Spitter = CreateConVar("l4d_stats_spitter", "5", "[L4D2] Base score for killing a Spitter", _, true, 1.0);
-	cvar_Jockey = CreateConVar("l4d_stats_jockey", "5", "[L4D2] Base score for killing a Jockey", _, true, 1.0);
-	cvar_Charger = CreateConVar("l4d_stats_charger", "5", "[L4D2] Base score for killing a Charger", _, true, 1.0);
-	cvar_InfectedDamage = CreateConVar("l4d_stats_infected_damage", "2", "The amount of damage inflicted to Survivors to earn 1 point", _, true, 1.0);
+	// 感染者得分 Cvars
+	cvar_Infected = CreateConVar("l4d_stats_infected", "1", "杀死普通感染者的基本分数", _, true, 1.0);
+	cvar_Hunter = CreateConVar("l4d_stats_hunter", "2", "杀死猎人的基础分数", _, true, 1.0);
+	cvar_Smoker = CreateConVar("l4d_stats_smoker", "3", "杀死smoker基本分数", _, true, 1.0);
+	cvar_Boomer = CreateConVar("l4d_stats_boomer", "5", "杀死 Boomer 的基本分数", _, true, 1.0);
+	cvar_Spitter = CreateConVar("l4d_stats_spitter", "5", "[L4D2] 杀死 Spitter 的基本分数", _, true, 1.0);
+	cvar_Jockey = CreateConVar("l4d_stats_jockey", "5", "[L4D2] 杀死jockey基本分数", _, true, 1.0);
+	cvar_Charger = CreateConVar("l4d_stats_charger", "5", "[L4D2] 杀死Charger的基本分数 ", _, true, 1.0);
+	cvar_InfectedDamage = CreateConVar("l4d_stats_infected_damage", "2", "对幸存者造成1点伤害基本分数", _, true, 1.0);
 
-	// Misc personal gain Cvars
-	cvar_Pills = CreateConVar("l4d_stats_pills", "15", "Base score for giving Pills to a friendly", _, true, 1.0);
-	cvar_Adrenaline = CreateConVar("l4d_stats_adrenaline", "15", "[L4D2] Base score for giving Adrenaline to a friendly", _, true, 1.0);
-	cvar_Medkit = CreateConVar("l4d_stats_medkit", "20", "Base score for using a Medkit on a friendly", _, true, 1.0);
-	cvar_Defib = CreateConVar("l4d_stats_defib", "20", "[L4D2] Base score for using a Defibrillator on a friendly", _, true, 1.0);
-	cvar_SmokerDrag = CreateConVar("l4d_stats_smokerdrag", "5", "Base score for saving a friendly from a Smoker Tongue Drag", _, true, 1.0);
-	cvar_JockeyRide = CreateConVar("l4d_stats_jockeyride", "10", "[L4D2] Base score for saving a friendly from a Jockey Ride", _, true, 1.0);
-	cvar_ChargerPlummel = CreateConVar("l4d_stats_chargerplummel", "10", "[L4D2] Base score for saving a friendly from a Charger Plummel", _, true, 1.0);
-	cvar_ChargerCarry = CreateConVar("l4d_stats_chargercarry", "15", "[L4D2] Base score for saving a friendly from a Charger Carry", _, true, 1.0);
-	cvar_ChokePounce = CreateConVar("l4d_stats_chokepounce", "10", "Base score for saving a friendly from a Hunter Pounce / Smoker Choke", _, true, 1.0);
-	cvar_Revive = CreateConVar("l4d_stats_revive", "15", "Base score for Revive a friendly from Incapacitated state", _, true, 1.0);
-	cvar_Rescue = CreateConVar("l4d_stats_rescue", "10", "Base score for Rescue a friendly from a closet", _, true, 1.0);
-	cvar_Protect = CreateConVar("l4d_stats_protect", "3", "Base score for Protect a friendly in combat", _, true, 1.0);
-	cvar_PlayerLedgeSuccess = CreateConVar("l4d_stats_ledgegrap", "15", "Base score for causing a survivor to grap a ledge", _, true, 1.0);
-	cvar_Matador = CreateConVar("l4d_stats_matador", "30", "[L4D2] Base score for killing a charging Charger with a melee weapon", _, true, 1.0);
-	cvar_WitchCrowned = CreateConVar("l4d_stats_witchcrowned", "30", "Base score for Crowning a Witch", _, true, 1.0);
+	// 其他个人收益 Cvars
+	cvar_Pills = CreateConVar("l4d_stats_pills", "15", "给友方提供药丸的基本分数", _, true, 1.0);
+	cvar_Adrenaline = CreateConVar("l4d_stats_adrenaline", "15", "[L4D2] 为友军提供肾上腺素的基本分数", _, true, 1.0);
+	cvar_Medkit = CreateConVar("l4d_stats_medkit", "20", "在友军上使用 Medkit 的基本分数", _, true, 1.0);
+	cvar_Defib = CreateConVar("l4d_stats_defib", "20", "[L4D2] 在友方上使用除颤器的基本分数", _, true, 1.0);
+	cvar_SmokerDrag = CreateConVar("l4d_stats_smokerdrag", "5", "从吸烟者舌头拖拽中拯救友军的基本分数", _, true, 1.0);
+	cvar_JockeyRide = CreateConVar("l4d_stats_jockeyride", "10", "[L4D2] 从骑师骑行中拯救友军的基本分数", _, true, 1.0);
+	cvar_ChargerPlummel = CreateConVar("l4d_stats_chargerplummel", "10", "[L4D2] 从 Charger Plummel 中拯救友军的基本分数", _, true, 1.0);
+	cvar_ChargerCarry = CreateConVar("l4d_stats_chargercarry", "15", "[L4D2] 从Charger中拯救友军的基本分数", _, true, 1.0);
+	cvar_ChokePounce = CreateConVar("l4d_stats_chokepounce", "10", "从猎人猛扑/吸烟者窒息中拯救友军的基本分数", _, true, 1.0);
+	cvar_Revive = CreateConVar("l4d_stats_revive", "15", "使友方从失能状态中复活的基础分数", _, true, 1.0);
+	cvar_Rescue = CreateConVar("l4d_stats_rescue", "10", "从密室中营救友军的基本分数", _, true, 1.0);
+	cvar_Protect = CreateConVar("l4d_stats_protect", "3", "在战斗中保护友军的基本分数", _, true, 1.0);
+	cvar_PlayerLedgeSuccess = CreateConVar("l4d_stats_ledgegrap", "15", "导致幸存者抓住壁架的基本分数", _, true, 1.0);
+	cvar_Matador = CreateConVar("l4d_stats_matador", "30", "[L4D2] 使用近战武器杀死冲锋的Charger基本分数", _, true, 1.0);
+	cvar_WitchCrowned = CreateConVar("l4d_stats_witchcrowned", "30", "加冕女巫的基本分数", _, true, 1.0);
 
-	// Team gain Cvars
-	cvar_Tank = CreateConVar("l4d_stats_tank", "25", "Base team score for killing a Tank", _, true, 1.0);
-	cvar_Panic = CreateConVar("l4d_stats_panic", "25", "Base team score for surviving a Panic Event with no Incapacitations", _, true, 1.0);
-	cvar_BoomerMob = CreateConVar("l4d_stats_boomermob", "10", "Base team score for surviving a Boomer Mob with no Incapacitations", _, true, 1.0);
-	cvar_SafeHouse = CreateConVar("l4d_stats_safehouse", "10", "Base score for reaching a Safe House", _, true, 1.0);
-	cvar_Witch = CreateConVar("l4d_stats_witch", "10", "Base score for Not Disturbing a Witch", _, true, 1.0);
-	cvar_VictorySurvivors = CreateConVar("l4d_stats_campaign", "5", "Base score for Completing a Campaign", _, true, 1.0);
-	cvar_VictoryInfected = CreateConVar("l4d_stats_infected_win", "30", "Base victory score for Infected Team", _, true, 1.0);
+	// 团队增益 Cvars
+	cvar_Tank = CreateConVar("l4d_stats_tank", "25", "击杀坦克的基本队得分", _, true, 1.0);
+	cvar_Panic = CreateConVar("l4d_stats_panic", "25", "在没有失能的情况下幸存恐慌事件的基础团队得分", _, true, 1.0);
+	cvar_BoomerMob = CreateConVar("l4d_stats_boomermob", "10", "在没有丧失能力的情况下在婴儿潮一代暴民中幸存的基础团队得分", _, true, 1.0);
+	cvar_SafeHouse = CreateConVar("l4d_stats_safehouse", "10", "到达安全屋的基本分数", _, true, 1.0);
+	cvar_Witch = CreateConVar("l4d_stats_witch", "10", "不打扰女巫的基本分数", _, true, 1.0);
+	cvar_VictorySurvivors = CreateConVar("l4d_stats_campaign", "5", "完成战役的基本分数", _, true, 1.0);
+	cvar_VictoryInfected = CreateConVar("l4d_stats_infected_win", "30", "受感染队伍的基本胜利分数", _, true, 1.0);
 
-	// Point loss Cvars
-	cvar_FFire = CreateConVar("l4d_stats_ffire", "25", "Base score for Friendly Fire", _, true, 1.0);
-	cvar_FIncap = CreateConVar("l4d_stats_fincap", "75", "Base score for a Friendly Incap", _, true, 1.0);
-	cvar_FKill = CreateConVar("l4d_stats_fkill", "250", "Base score for a Friendly Kill", _, true, 1.0);
-	cvar_InSafeRoom = CreateConVar("l4d_stats_insaferoom", "5", "Base score for letting Infected in the Safe Room", _, true, 1.0);
-	cvar_Restart = CreateConVar("l4d_stats_restart", "100", "Base score for a Round Restart", _, true, 1.0);
-	cvar_MedkitUsedPointPenalty = CreateConVar("l4d_stats_medkitpenalty", "0.1", "Score reduction for all Survivor earned points for each used Medkit (Formula: Score = NormalPoints * (1 - MedkitsUsed * MedkitPenalty))", _, true, 0.0, true, 0.5);
-	cvar_MedkitUsedPointPenaltyMax = CreateConVar("l4d_stats_medkitpenaltymax", "1.0", "Maximum score reduction (the score reduction will not go over this value when a Medkit is used)", _, true, 0.0, true, 1.0);
-	cvar_MedkitUsedFree = CreateConVar("l4d_stats_medkitpenaltyfree", "0", "Team Survivors can use this many Medkits for free without any reduction to the score", _, true, 0.0);
-	cvar_MedkitUsedRealismFree = CreateConVar("l4d_stats_medkitpenaltyfree_r", "4", "Team Survivors can use this many Medkits for free without any reduction to the score when playing in Realism gamemodes (-1 = use the value in l4d_stats_medkitpenaltyfree)", _, true, -1.0);
-	cvar_MedkitBotMode = CreateConVar("l4d_stats_medkitbotmode", "1", "Add score reduction when bot uses a medkit. 0 = No, 1 = Bot uses a Medkit to a human player, 2 = Bot uses a Medkit to other than itself, 3 = Yes", _, true, 0.0, true, 2.0);
-	cvar_CarAlarm = CreateConVar("l4d_stats_caralarm", "50", "[L4D2] Base score for a Triggering Car Alarm", _, true, 1.0);
-	cvar_BotScoreMultiplier = CreateConVar("l4d_stats_botscoremultiplier", "1.0", "Multiplier to use when receiving bot related score penalty. 0 = Disable", _, true, 0.0);
+	// 点损失 Cvars
+	cvar_FFire = CreateConVar("l4d_stats_ffire", "25", "黑枪开火的基本分数", _, true, 1.0);
+	cvar_FIncap = CreateConVar("l4d_stats_fincap", "75", "黑枪开火倒地的基本分数", _, true, 1.0);
+	cvar_FKill = CreateConVar("l4d_stats_fkill", "250", "黑枪友方致死的基本分数", _, true, 1.0);
+	cvar_InSafeRoom = CreateConVar("l4d_stats_insaferoom", "5", "让感染者进入安全室的基本分数", _, true, 1.0);
+	cvar_Restart = CreateConVar("l4d_stats_restart", "100", "一轮重启的基础分数", _, true, 1.0);
+	cvar_MedkitUsedPointPenalty = CreateConVar("l4d_stats_medkitpenalty", "0.1", "每使用一次医疗包，所有幸存者挣得的分数都会减少(公式:分数= 正常点数 * (1 - 已使用医疗包 * 医疗包处罚))", _, true, 0.0, true, 0.5);
+	cvar_MedkitUsedPointPenaltyMax = CreateConVar("l4d_stats_medkitpenaltymax", "1.0", "最大分数降低（使用 Medkit 时分数降低不会超过此值）", _, true, 0.0, true, 1.0);
+	cvar_MedkitUsedFree = CreateConVar("l4d_stats_medkitpenaltyfree", "0", "团队幸存者可以免费使用这么多 Medkit，且分数不会减少", _, true, 0.0);
+	cvar_MedkitUsedRealismFree = CreateConVar("l4d_stats_medkitpenaltyfree_r", "4", "团队幸存者可以免费使用这么多 Medkit，在现实主义游戏模式下玩时不会降低分数（-1 = 使用 l4d_stats_medkitpenaltyfree 中的值）", _, true, -1.0);
+	cvar_MedkitBotMode = CreateConVar("l4d_stats_medkitbotmode", "1", "当机器人使用 Medkit 时添加分数减少。0 = 否，1 = 机器人对人类玩家使用 Medkit，2 = 机器人对自身以外的人使用 Medkit，3 =是", _, true, 0.0, true, 2.0);
+	cvar_CarAlarm = CreateConVar("l4d_stats_caralarm", "50", "[L4D2] 触发汽车警报的基本分数", _, true, 1.0);
+	cvar_BotScoreMultiplier = CreateConVar("l4d_stats_botscoremultiplier", "1.0", "接收机器人相关分数惩罚时使用的乘数。0 = 禁用", _, true, 0.0);
 
-	// Survivor point Cvars
-	cvar_SurvivorDeath = CreateConVar("l4d_stats_survivor_death", "40", "Base score for killing a Survivor", _, true, 1.0);
-	cvar_SurvivorIncap = CreateConVar("l4d_stats_survivor_incap", "15", "Base score for incapacitating a Survivor", _, true, 1.0);
+	// 幸存者点 Cvars
+	cvar_SurvivorDeath = CreateConVar("l4d_stats_survivor_death", "40", "杀死幸存者的基本分数", _, true, 1.0);
+	cvar_SurvivorIncap = CreateConVar("l4d_stats_survivor_incap", "15", "使幸存者丧失能力的基本分数", _, true, 1.0);
 
 	// Hunter point Cvars
-	cvar_HunterPerfectPounceDamage = CreateConVar("l4d_stats_perfectpouncedamage", "25", "The amount of damage from a pounce to earn Perfect Pounce (Death From Above) success points", _, true, 1.0);
-	cvar_HunterPerfectPounceSuccess = CreateConVar("l4d_stats_perfectpouncesuccess", "25", "Base score for a successful Perfect Pounce", _, true, 1.0);
-	cvar_HunterNicePounceDamage = CreateConVar("l4d_stats_nicepouncedamage", "15", "The amount of damage from a pounce to earn Nice Pounce (Pain From Above) success points", _, true, 1.0);
-	cvar_HunterNicePounceSuccess = CreateConVar("l4d_stats_nicepouncesuccess", "10", "Base score for a successful Nice Pounce", _, true, 1.0);
-	cvar_HunterDamageCap = CreateConVar("l4d_stats_hunterdamagecap", "25", "Hunter stored damage cap", _, true, 25.0);
+	cvar_HunterPerfectPounceDamage = CreateConVar("l4d_stats_perfectpouncedamage", "25", "获得完美突袭（上方死亡）成功点的突袭伤害量", _, true, 1.0);
+	cvar_HunterPerfectPounceSuccess = CreateConVar("l4d_stats_perfectpouncesuccess", "25", "成功完美突袭的基础分数", _, true, 1.0);
+	cvar_HunterNicePounceDamage = CreateConVar("l4d_stats_nicepouncedamage", "15", "通过猛击获得的漂亮猛击（上方疼痛）成功点数的伤害量", _, true, 1.0);
+	cvar_HunterNicePounceSuccess = CreateConVar("l4d_stats_nicepouncesuccess", "10", "成功突袭的基本分数", _, true, 1.0);
+	cvar_HunterDamageCap = CreateConVar("l4d_stats_hunterdamagecap", "25", "猎人储存伤害上限", _, true, 25.0);
 
 	if (ServerVersion == Engine_Left4Dead)
 	{
@@ -566,32 +566,32 @@ public OnPluginStart()
 	}
 	MaxPounceDamage = GetConVarInt(FindConVar("z_hunter_max_pounce_bonus_damage"));
 
-	// Boomer point Cvars
-	cvar_BoomerSuccess = CreateConVar("l4d_stats_boomersuccess", "5", "Base score for a successfully vomiting on survivor", _, true, 1.0);
-	cvar_BoomerPerfectHits = CreateConVar("l4d_stats_boomerperfecthits", "4", "The number of survivors that needs to get blinded to earn Boomer Perfect Vomit Award and success points", _, true, 4.0);
-	cvar_BoomerPerfectSuccess = CreateConVar("l4d_stats_boomerperfectsuccess", "30", "Base score for a successful Boomer Perfect Vomit", _, true, 1.0);
+	// Boomer点数 Cvars
+	cvar_BoomerSuccess = CreateConVar("l4d_stats_boomersuccess", "5", "成功呕吐幸存者的基本分数", _, true, 1.0);
+	cvar_BoomerPerfectHits = CreateConVar("l4d_stats_boomerperfecthits", "4", "需要失明才能获得Boome完美呕吐奖和成功点数的幸存者数量", _, true, 4.0);
+	cvar_BoomerPerfectSuccess = CreateConVar("l4d_stats_boomerperfectsuccess", "30", "Boome完美呕吐的基本分数", _, true, 1.0);
 
-	// Tank point Cvars
-	cvar_TankDamageCap = CreateConVar("l4d_stats_tankdmgcap", "500", "Maximum inflicted damage done by Tank to earn Infected damagepoints", _, true, 150.0);
-	cvar_TankDamageTotal = CreateConVar("l4d_stats_bulldozer", "200", "Damage inflicted by Tank to earn Bulldozer Award and success points", _, true, 200.0);
-	cvar_TankDamageTotalSuccess = CreateConVar("l4d_stats_bulldozersuccess", "50", "Base score for Bulldozer Award", _, true, 1.0);
-	cvar_TankThrowRockSuccess = CreateConVar("l4d_stats_tankthrowrocksuccess", "5", "Base score for a Tank thrown rock hit", _, true, 0.0);
+	// Tank 点数 Cvars
+	cvar_TankDamageCap = CreateConVar("l4d_stats_tankdmgcap", "500", "坦克造成的最大伤害以获得受感染的伤害点", _, true, 150.0);
+	cvar_TankDamageTotal = CreateConVar("l4d_stats_bulldozer", "200", "坦克造成的伤害以获得推土机奖励和成功点数", _, true, 200.0);
+	cvar_TankDamageTotalSuccess = CreateConVar("l4d_stats_bulldozersuccess", "50", "推土机奖的基本得分", _, true, 1.0);
+	cvar_TankThrowRockSuccess = CreateConVar("l4d_stats_tankthrowrocksuccess", "5", "坦克投掷石块击中的基本得分", _, true, 0.0);
 
-	// Charger point Cvars
+	// Charger 点数 Cvars
 	cvar_ChargerRamSuccess = CreateConVar("l4d_stats_chargerramsuccess", "40", "Base score for a successful Charger Scattering Ram", _, true, 1.0);
 	cvar_ChargerRamHits = CreateConVar("l4d_stats_chargerramhits", "4", "The number of impacts on survivors to earn Scattering Ram Award and success points", _, true, 2.0);
 
 	// Misc L4D2 Cvars
-	cvar_AmmoUpgradeAdded = CreateConVar("l4d_stats_deployammoupgrade", "10", "[L4D2] Base score for deploying ammo upgrade pack", _, true, 0.0);
-	cvar_GascanPoured = CreateConVar("l4d_stats_gascanpoured", "5", "[L4D2] Base score for successfully pouring a gascan", _, true, 0.0);
+	cvar_AmmoUpgradeAdded = CreateConVar("l4d_stats_deployammoupgrade", "10", "[L4D2] 部署弹药升级包的基本分数", _, true, 0.0);
+	cvar_GascanPoured = CreateConVar("l4d_stats_gascanpoured", "5", "[L4D2] 成功浇注 Gascan 的基本分数", _, true, 0.0);
 
 	// Other Cvars
-	cvar_Top10PPMMin = CreateConVar("l4d_stats_top10ppmplaytime", "30", "Minimum playtime (minutes) to show in top10 ppm list", _, true, 1.0);
-	cvar_RankVoteTime = CreateConVar("l4d_stats_rankvotetime", "20", "Time to wait people to vote", _, true, 10.0);
+	cvar_Top10PPMMin = CreateConVar("l4d_stats_top10ppmplaytime", "30", "最小游戏时间(分钟)显示在top10 ppm列表中", _, true, 1.0);
+	cvar_RankVoteTime = CreateConVar("l4d_stats_rankvotetime", "20", "等待人们投票的时间", _, true, 10.0);
 
-	cvar_SoundsEnabled = CreateConVar("l4d_stats_soundsenabled", "1", "Play sounds on certain events", _, true, 0.0, true, 1.0);
+	cvar_SoundsEnabled = CreateConVar("l4d_stats_soundsenabled", "1", "在某些事件上播放声音", _, true, 0.0, true, 1.0);
 
-	// Make that config!
+	// 请进行配置!
 	AutoExecConfig(true, "l4d_stats");
 
 	// Personal Gain Events
@@ -809,10 +809,10 @@ public OnConfigsExecuted()
 	RegConsoleCmd("sm_showmotd", cmd_ShowMotd);
 
 	// Register administrator command for clearing all stats (BE CAREFUL)
-	//RegAdminCmd("sm_rank_admin", cmd_RankAdmin, ADMFLAG_ROOT, "Display admin panel for Rank");
-	RegAdminCmd("sm_rank_clear", cmd_ClearRank, ADMFLAG_ROOT, "Clear all stats from database (asks a confirmation before clearing the database)");
-	RegAdminCmd("sm_rank_shuffle", cmd_ShuffleTeams, ADMFLAG_KICK, "Shuffle teams by player PPM (Points Per Minute)");
-	RegAdminCmd("sm_rank_motd", cmd_SetMotd, ADMFLAG_GENERIC, "Set Message Of The Day");
+	//RegAdminCmd("sm_rank_admin", cmd_RankAdmin, ADMFLAG_ROOT, "显示排名管理面板");
+	RegAdminCmd("sm_rank_clear", cmd_ClearRank, ADMFLAG_ROOT, "清除数据库中的所有统计信息（清除数据库之前要求确认）");
+	RegAdminCmd("sm_rank_shuffle", cmd_ShuffleTeams, ADMFLAG_KICK, "按玩家 PPM（每分钟点数）随机排列队伍");
+	RegAdminCmd("sm_rank_motd", cmd_SetMotd, ADMFLAG_GENERIC, "设置每日消息");
 	
 	// Read the settings etc from the database.
 	ReadDb();
@@ -834,7 +834,7 @@ public OnAdminMenuReady(Handle TopMenuHandle)
 	AddToTopMenu(RankAdminMenu, "Player Stats", TopMenuObject_Category, ClearRankCategoryHandler, INVALID_TOPMENUOBJECT);
 
 	// Get a handle for the catagory we just added so we can add items to it
-	TopMenuObject statscommands = FindTopMenuCategory(RankAdminMenu, "Player Stats");
+	TopMenuObject statscommands = FindTopMenuCategory(RankAdminMenu, "玩家统计");
 
 	// Don't attempt to add items to the catagory if for some reason the catagory doesn't exist
 	if (statscommands == INVALID_TOPMENUOBJECT)
@@ -877,8 +877,8 @@ public Action:Menu_CreateClearMenu(client, args)
 	SetMenuExitBackButton(menu, true);
 	SetMenuExitButton(menu, true);
 
-	AddMenuItem(menu, "cps", "Clear stats from currently playing player...");
-	AddMenuItem(menu, "ctm", "Clear timed maps...");
+	AddMenuItem(menu, "cps", "除当前玩家的统计数据...");
+	AddMenuItem(menu, "ctm", "清除定时地图...");
 
 	DisplayMenu(menu, client, 30);
 
@@ -919,11 +919,11 @@ public Action:Menu_CreateClearTMMenu(client, args)
 {
 	Handle menu = CreateMenu(Menu_CreateClearTMMenuHandler);
 
-	SetMenuTitle(menu, "Clear Timed Maps:");
+	SetMenuTitle(menu, "清除定时地图:");
 	SetMenuExitBackButton(menu, true);
 	SetMenuExitButton(menu, true);
 
-	AddMenuItem(menu, "ctma",  "All");
+	AddMenuItem(menu, "ctma",  "全部");
 	AddMenuItem(menu, "ctmc",  "Coop");
 	AddMenuItem(menu, "ctmsu", "Survival");
 	AddMenuItem(menu, "ctmr",  "Realism");
@@ -944,23 +944,23 @@ public Menu_CreateClearTMMenuHandler(Handle menu, MenuAction:action, param1, par
 			{
 				case 0:
 				{
-					DisplayYesNoPanel(param1, "Do you really want to clear all map timings?", ClearTMAllPanelHandler);
+					DisplayYesNoPanel(param1, "你真的要清除所有地图计时吗？", ClearTMAllPanelHandler);
 				}
 				case 1:
 				{
-					DisplayYesNoPanel(param1, "Do you really want to clear all Coop map timings?", ClearTMCoopPanelHandler);
+					DisplayYesNoPanel(param1, "你真的想清除所有 Coop 地图计时吗？", ClearTMCoopPanelHandler);
 				}
 				case 2:
 				{
-					DisplayYesNoPanel(param1, "Do you really want to clear all Survival map timings?", ClearTMSurvivalPanelHandler);
+					DisplayYesNoPanel(param1, "你真的要清除所有生存地图计时吗？", ClearTMSurvivalPanelHandler);
 				}
 				case 3:
 				{
-					DisplayYesNoPanel(param1, "Do you really want to clear all Realism map timings?", ClearTMRealismPanelHandler);
+					DisplayYesNoPanel(param1, "您真的要清除所有 Realism 地图计时吗？", ClearTMRealismPanelHandler);
 				}
 				case 4:
 				{
-					DisplayYesNoPanel(param1, "Do you really want to clear all Mutations map timings?", ClearTMMutationsPanelHandler);
+					DisplayYesNoPanel(param1, "你真的想清除所有 Mutations 映射计时吗？", ClearTMMutationsPanelHandler);
 				}
 			}
 		}
@@ -986,31 +986,31 @@ public ClearRankTopItemHandler(Handle topmenu, TopMenuAction:action, TopMenuObje
 	{
 		if (object_id == MenuClearPlayers)
 		{
-			Format(buffer, maxlength, "Clear players");
+			Format(buffer, maxlength, "清除玩家");
 		}
 		else if (object_id == MenuClearMaps)
 		{
-			Format(buffer, maxlength, "Clear maps");
+			Format(buffer, maxlength, "清除地图");
 		}
 		else if (object_id == MenuClearAll)
 		{
-			Format(buffer, maxlength, "Clear all");
+			Format(buffer, maxlength, "清除全部");
 		}
 		else if (object_id == MenuClearTimedMaps)
 		{
-			Format(buffer, maxlength, "Clear timed maps");
+			Format(buffer, maxlength, "清除定时地图");
 		}
 		else if (object_id == MenuRemoveCustomMaps)
 		{
-			Format(buffer, maxlength, "Remove custom maps");
+			Format(buffer, maxlength, "删除自定义地图");
 		}
 		else if (object_id == MenuCleanPlayers)
 		{
-			Format(buffer, maxlength, "Clean players");
+			Format(buffer, maxlength, "清洁的玩家");
 		}
 		else if (object_id == MenuClear)
 		{
-			Format(buffer, maxlength, "Clear...");
+			Format(buffer, maxlength, "清除...");
 		}
 	}
 
@@ -1019,27 +1019,27 @@ public ClearRankTopItemHandler(Handle topmenu, TopMenuAction:action, TopMenuObje
 	{
 		if (object_id == MenuClearPlayers)
 		{
-			DisplayYesNoPanel(client, "Do you really want to clear the player stats?", ClearPlayersPanelHandler);
+			DisplayYesNoPanel(client, "你真的想清除玩家统计数据吗？", ClearPlayersPanelHandler);
 		}
 		else if (object_id == MenuClearMaps)
 		{
-			DisplayYesNoPanel(client, "Do you really want to clear the map stats?", ClearMapsPanelHandler);
+			DisplayYesNoPanel(client, "您真的要清除地图统计信息吗？", ClearMapsPanelHandler);
 		}
 		else if (object_id == MenuClearAll)
 		{
-			DisplayYesNoPanel(client, "Do you really want to clear all stats?", ClearAllPanelHandler);
+			DisplayYesNoPanel(client, "您真的要清除所有统计信息吗？", ClearAllPanelHandler);
 		}
 		else if (object_id == MenuClearTimedMaps)
 		{
-			DisplayYesNoPanel(client, "Do you really want to clear all map timings?", ClearTMAllPanelHandler);
+			DisplayYesNoPanel(client, "您真的要清除所有地图计时吗？", ClearTMAllPanelHandler);
 		}
 		else if (object_id == MenuRemoveCustomMaps)
 		{
-			DisplayYesNoPanel(client, "Do you really want to remove the custom maps?", RemoveCustomMapsPanelHandler);
+			DisplayYesNoPanel(client, "您真的要删除自定义地图吗？", RemoveCustomMapsPanelHandler);
 		}
 		else if (object_id == MenuCleanPlayers)
 		{
-			DisplayYesNoPanel(client, "Do you really want to clean the player stats?", CleanPlayersPanelHandler);
+			DisplayYesNoPanel(client, "你真的想清理玩家统计数据吗？", CleanPlayersPanelHandler);
 		}
 		else if (object_id == MenuClear)
 		{
@@ -1480,9 +1480,9 @@ public Action:timer_ProtectedFriendly(Handle timer, any data)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(data, "You have earned \x04%i \x01points for Protecting \x05%i friendlies\x01!", Score, ProtectedFriendlies);
+			StatsPrintToChat(data, "您因保护\x05%i队友\x04%i而获得\x01积分！\x04%i points for Protecting  friendlies\x01!", Score, ProtectedFriendlies);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for Protecting \x05%i friendlies\x01!", UserName, Score, ProtectedFriendlies);
+			StatsPrintToChatAll("\x05%s \x01因保护\x04%i \x01而获得 \x05%i 队友\x01积分!", UserName, Score, ProtectedFriendlies);
 	}
 }
 // Team infected damage score
@@ -1556,18 +1556,18 @@ public Action:timer_InfectedDamageCheck(Handle timer, any data)
 		if (Mode == 1 || Mode == 2)
 		{
 			if (InfectedDamage > 1)
-				StatsPrintToChat(data, "You have earned \x04%i \x01points for doing \x04%i \x01points of damage to the Survivors!", Score, DamageCounter);
+				StatsPrintToChat(data, "你因对幸存者造成了\x04%i \x01点伤害而获得了\x04%i \x01点！", Score, DamageCounter);
 			else
-				StatsPrintToChat(data, "You have earned \x04%i \x01points for doing damage to the Survivors!", Score, DamageCounter);
+				StatsPrintToChat(data, "你因对幸存者造成伤害而获得了 \x04%i \x01点!", Score, DamageCounter);
 		}
 		else if (Mode == 3)
 		{
 			char Name[MAX_LINE_WIDTH];
 			GetClientName(data, Name, sizeof(Name));
 			if (InfectedDamage > 1)
-				StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for doing \x04%i \x01points of damage to the Survivors!", Name, Score, DamageCounter);
+				StatsPrintToChatAll("\x05%s \x01因对幸存者造成\x04%i \x01点伤害而赢得了\x04%i \x01点!", Name, Score, DamageCounter);
 			else
-				StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for doing damage to the Survivors!", Name, Score, DamageCounter);
+				StatsPrintToChatAll("\x05%s \x01因对幸存者造成伤害而获得了 \x04%i \x01点!", Name, Score, DamageCounter);
 		}
 	}
 }
@@ -1642,18 +1642,18 @@ public Action:timer_BoomerBlindnessCheck(Handle timer, any data)
 			if (Mode == 1 || Mode == 2)
 			{
 				if (AwardCounter > 0)
-					StatsPrintToChat(data, "You have earned \x04%i \x01points from \x05Perfect Blindness\x01!", Score);
+					StatsPrintToChat(data, "你获得 \x04%i \x01积分，因\x05完美失明\x01!", Score);
 				else
-					StatsPrintToChat(data, "You have earned \x04%i \x01points for blinding \x05%i Survivors\x01!", Score, OriginalHitCounter);
+					StatsPrintToChat(data, "你获得\x04%i \x01积分，因致盲\x05%i 幸存者\x01!", Score, OriginalHitCounter);
 			}
 			else if (Mode == 3)
 			{
 				char Name[MAX_LINE_WIDTH];
 				GetClientName(data, Name, sizeof(Name));
 				if (AwardCounter > 0)
-					StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points from \x05Perfect Blindness\x01!", Name, Score);
+					StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01积分，因 \x05完美失明\x01!", Name, Score);
 				else
-					StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for blinding \x05%i Survivors\x01!", Name, Score, OriginalHitCounter);
+					StatsPrintToChatAll("\x05%s \x01获得\x04%i \x01积分，因致盲 \x05%i 幸存者\x01!", Name, Score, OriginalHitCounter);
 			}
 		}
 
@@ -2589,12 +2589,12 @@ public Action:timer_EndCharge(Handle timer, any data)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if ((Mode == 1 || Mode == 2) && IsClientConnected(data) && IsClientInGame(data))
-		StatsPrintToChat(data, "You have earned \x04%i \x01points for charging a \x05Scattering Ram \x01on \x03%i \x01victims!", Score, Counter);
+		StatsPrintToChat(data, "你已经获得\x04%i \x01积分，因charging\x05撞飞 \x01了 \x03%i \x01受害者!", Score, Counter);
 	else if (Mode == 3)
 	{
 		char AttackerName[MAX_LINE_WIDTH];
 		GetClientName(data, AttackerName, sizeof(AttackerName));
-		StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for charging a \x05Scattering Ram \x01on \x03%i \x01victims!", AttackerName, Score, Counter);
+		StatsPrintToChatAll("\x05%s \x01已获得\x04%i \x01积分，charging\x05撞飞 \x01了 \x03%i \x01受害者!", AttackerName, Score, Counter);
 	}
 }
 
@@ -2701,9 +2701,9 @@ public Action:timer_FriendlyFireDamageEnd(Handle timer, any dp)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if ((Mode == 1 || Mode == 2) && IsClientConnected(Attacker) && IsClientInGame(Attacker))
-		StatsPrintToChat(Attacker, "You have \x03LOST \x04%i \x01points for inflicting \x03Friendly Fire Damage \x05(%i HP)\x01!", Score, HumanDamage + BotDamage);
+		StatsPrintToChat(Attacker, "你\x03损失\x04%i \x01积分,因 \x03黑枪\x05(%i HP)\x01!", Score, HumanDamage + BotDamage);
 	else if (Mode == 3)
-		StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for inflicting \x03Friendly Fire Damage \x05(%i HP)\x01!", AttackerName, Score, HumanDamage + BotDamage);
+		StatsPrintToChatAll("\x05%s \x01有 \x03损失 \x04%i \x01积分,因 \x03黑枪\x05(%i HP)\x01!", AttackerName, Score, HumanDamage + BotDamage);
 }
 
 // Start team shuffle.
@@ -2740,7 +2740,7 @@ public Action:timer_ShuffleTeams(Handle timer, any data)
 
 	if (counter <= 1)
 	{
-		StatsPrintToChatAllPreFormatted2(true, "Team shuffle by player PPM failed because there was \x03not enough players\x01!");
+		StatsPrintToChatAllPreFormatted2(true, "按玩家 PPM 进行的团队洗牌失败，因为\x03没有足够的玩家\x01！");
 		return;
 	}
 
@@ -2762,7 +2762,7 @@ public Action:timer_RankVote(Handle timer, any data)
 
 		CheckRankVotes(humans, votes, yesvotes, novotes, WinningVoteCount);
 
-		StatsPrintToChatAll2(true, "Vote to shuffle teams by player PPM \x03%s \x01with \x04%i (yes) against %i (no)\x01.", (yesvotes > novotes ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
+		StatsPrintToChatAll2(true, "按玩家\x03%s \x01PPM\x04%i 同意(yes) 反对 %i (no)\x01投票.", (yesvotes > novotes ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
 
 		if (yesvotes > novotes)
 		{
@@ -2805,7 +2805,7 @@ public Action:timer_UpdatePlayers(Handle timer, Handle hndl)
 	{
 		if (GetConVarBool(cvar_DisabledMessages))
 		{
-			StatsPrintToChatAllPreFormatted("Left 4 Dead Stats are \x04DISABLED\x01, not enough Human players!");
+			StatsPrintToChatAllPreFormatted("L4D统计数据 \x04禁用\x01, 人类玩家不足!");
 		}
 
 		return;
@@ -2886,12 +2886,12 @@ public Action:timer_ShowTimerScore(Handle timer, Handle hndl)
 			{
 				if (Mode == 1 || Mode == 2)
 				{
-					StatsPrintToChat(i, "You have earned \x04%i \x01points for killing \x05%i \x01Infected!", TimerPoints[i], TimerKills[i]);
+					StatsPrintToChat(i, "你获得 \x04%i \x01积分，因杀死\x05%i \x01感染者!", TimerPoints[i], TimerKills[i]);
 				}
 				else if (Mode == 3)
 				{
 					GetClientName(i, Name, sizeof(Name));
-					StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for killing \x05%i \x01Infected!", Name, TimerPoints[i], TimerKills[i]);
+					StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01积分，因杀死 \x05%i \x01感染者!", Name, TimerPoints[i], TimerKills[i]);
 				}
 			}
 
@@ -3128,9 +3128,9 @@ public Action:event_PlayerDeath(Handle event, const char[] name, bool dontBroadc
 		SendSQLUpdate(query);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "You have \x03LOST \x04%i \x01points for \x03Team Killing \x05%s\x01!", Score, VictimName);
+			StatsPrintToChat(Attacker, "你有\x03丢失 \x04%i \x01分 \x03团队击杀 \x05%s\x01!", Score, VictimName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for \x03Team Killing \x05%s\x01!", AttackerName, Score, VictimName);
+			StatsPrintToChatAll("\x05%s \x01有 \x03丢失 \x04%i \x01分 \x03团队击杀 \x05%s\x01!", AttackerName, Score, VictimName);
 	}
 
 	// Attacker is a Survivor
@@ -3229,20 +3229,20 @@ public Action:event_PlayerDeath(Handle event, const char[] name, bool dontBroadc
 				if (Mode > 1)
 				{
 					GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-					StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for killing%s \x05%s \x01with a \x04HEAD SHOT\x01!", AttackerName, Score, (VictimIsBot ? " a" : ""), VictimName);
+					StatsPrintToChatAll("\x05%s \x01已获得 \x04%i \x01点，杀死%s \x05%s \x01，因\x04爆头击杀\x01!", AttackerName, Score, (VictimIsBot ? " a" : ""), VictimName);
 				}
 				else
-					StatsPrintToChat(Attacker, "You have earned \x04%i \x01points for killing%s \x05%s \x01with a \x04HEAD SHOT\x01!", Score, (VictimIsBot ? " a" : ""), VictimName);
+					StatsPrintToChat(Attacker, "你获得 \x04%i \x01点，杀死%s \x05%s \x01因 \x04爆头击杀\x01!", Score, (VictimIsBot ? " a" : ""), VictimName);
 			}
 			else
 			{
 				if (Mode > 2)
 				{
 					GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-					StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for killing%s \x05%s\x01!", AttackerName, Score, (VictimIsBot ? " a" : ""), VictimName);
+					StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01点，杀死%s \x05%s\x01!", AttackerName, Score, (VictimIsBot ? " a" : ""), VictimName);
 				}
 				else
-					StatsPrintToChat(Attacker, "You have earned \x04%i \x01points for killing%s \x05%s\x01!", Score, (VictimIsBot ? " a" : ""), VictimName);
+					StatsPrintToChat(Attacker, "你获得 \x04%i \x01点，杀死%s \x05%s\x01!", Score, (VictimIsBot ? " a" : ""), VictimName);
 			}
 		}
 
@@ -3401,7 +3401,7 @@ public Action:event_TankKilled(Handle event, const char[] name, bool dontBroadca
 
 	if (Mode && Score > 0)
 	{
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03ALL SURVIVORS \x01have earned \x04%i \x01points for killing a Tank with \x05%i Deaths\x01!", Score, Deaths);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01已赢得 \x04%i \x01积分，因TANK \x05%i 被杀死\x01!", Score, Deaths);
 	}
 
 	UpdateMapStat("kills", 1);
@@ -3486,9 +3486,9 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "You have earned \x04%i \x01points for giving adrenaline to \x05%s\x01!", Score, RecipientName);
+			StatsPrintToChat(Giver, "你已获得 \x04%i \x01积分，因提供肾上腺素 \x05%s\x01!", Score, RecipientName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for giving adrenaline to \x05%s\x01!", GiverName, Score, RecipientName);
+			StatsPrintToChatAll("\x05%s \x01已获得 \x04%i \x01积分，因给予肾上腺素 \x05%s\x01!", GiverName, Score, RecipientName);
 	}
 }
 
@@ -3590,9 +3590,9 @@ GivePills(Giver, Recipient, PillsID = -1)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "You have earned \x04%i \x01points for giving pills to \x05%s\x01!", Score, RecipientName);
+			StatsPrintToChat(Giver, "你获得 \x04%i \x01积分，因提供药丸 \x05%s\x01!", Score, RecipientName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for giving pills to \x05%s\x01!", GiverName, Score, RecipientName);
+			StatsPrintToChatAll("\x05%s \x01你获得 \x04%i \x01积分，因提供药丸\x05%s\x01!", GiverName, Score, RecipientName);
 	}
 }
 
@@ -3682,9 +3682,9 @@ public Action:event_DefibPlayer(Handle event, const char[] name, bool dontBroadc
 	{
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "You have earned \x04%i \x01points for Reviving \x05%s\x01 using a Defibrillator!", Score, RecipientName);
+			StatsPrintToChat(Giver, "你获得 \x04%i \x01积分，因使用除颤器复活\x05%s\x01!", Score, RecipientName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for Reviving \x05%s\x01 using a Defibrillator!", GiverName, Score, RecipientName);
+			StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01积分，因使用除颤器复活 \x05%s\x01!", GiverName, Score, RecipientName);
 	}
 }
 
@@ -3778,9 +3778,9 @@ public Action:event_HealPlayer(Handle event, const char[] name, bool dontBroadca
 	{
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "You have earned \x04%i \x01points for healing \x05%s\x01!", Score, RecipientName);
+			StatsPrintToChat(Giver, "你获得\x04%i \x01积分，因治疗\x05%s\x01!", Score, RecipientName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for healing \x05%s\x01!", GiverName, Score, RecipientName);
+			StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01积分，因治疗\x05%s\x01!", GiverName, Score, RecipientName);
 	}
 }
 
@@ -3925,10 +3925,10 @@ public Action:event_CampaignWin(Handle event, const char[] name, bool dontBroadc
 
 	if (Mode && Score > 0)
 	{
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03ALL SURVIVORS \x01have earned \x04%i \x01points for winning the \x04Campaign Finale \x01with \x05%i survivors\x01!", Score, SurvivorCount);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01获得\x04%i \x01积分，因幸存者 \x04完成 \x01with \x05%i 战役大结局\x01!", Score, SurvivorCount);
 
 		if (NegativeScore)
-			StatsPrintToChatTeam(TEAM_INFECTED, "\x03ALL INFECTED \x01have \x03LOST \x04%i \x01points for loosing the \x04Campaign Finale \x01to \x05%i survivors\x01!", Score, SurvivorCount);
+			StatsPrintToChatTeam(TEAM_INFECTED, "\x03所有感染者 \x01都 \x03失去 \x04%i \x01积分，因 \x04战役结局 \x01to \x05%i 中输给了幸存者\x01!", Score, SurvivorCount);
 	}
 }
 
@@ -4028,7 +4028,7 @@ public Action:timer_PanicEventEnd(Handle timer, Handle hndl)
 			}
 
 			if (Mode)
-				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03ALL SURVIVORS \x01have earned \x04%i \x01points for \x05No Incapicitates Or Deaths After Panic Event\x01!", Score);
+				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01获得 \x04%i \x0积分，因 \x05在恐慌事件后没有丧失能力或死亡！\x01!", Score);
 		}
 	}
 
@@ -4147,7 +4147,7 @@ public Action:event_PlayerBlindEnd(Handle event, const char[] name, bool dontBro
 			}
 
 			if (Mode)
-				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03ALL SURVIVORS \x01have earned \x04%i \x01points for \x05No Incapicitates Or Deaths After Boomer Mob\x01!", Score);
+				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01获得 \x04%i \x01分，因为\x05Boomer喷吐后没有丧失能力或死亡\x01!", Score);
 		}
 	}
 
@@ -4264,9 +4264,9 @@ PlayerIncap(Attacker, Victim)
 		SendSQLUpdate(query);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "You have \x03LOST \x04%i \x01points for \x03Incapicitating \x05%s\x01!", Score, VictimName);
+			StatsPrintToChat(Attacker, "你 \x03丢失 \x04%i \x01积分，因\x03倒地 \x05%s\x01!", Score, VictimName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for \x03Incapicitating \x05%s\x01!", AttackerName, Score, VictimName);
+			StatsPrintToChatAll("\x05%s \x01队友 \x03丢失 \x04%i \x01积分，因 \x03倒地 \x05%s\x01!", AttackerName, Score, VictimName);
 	}
 
 	// Attacker is an Infected
@@ -4425,12 +4425,12 @@ public Action:event_PlayerLedge(Handle event, const char[] name, bool dontBroadc
 		UpdateMapStat("points_infected", Score);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "You have earned \x04%i \x01points for causing player \x05%s\x01 to grab a ledge!", Score, VictimName);
+			StatsPrintToChat(Attacker, "你已获得 \x04%i \x01积分，因导致玩家 \x05%s\x01 挂边!", Score, VictimName);
 		else if (Mode == 3)
 		{
 			char AttackerName[MAX_LINE_WIDTH];
 			GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-			StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for causing player \x05%s\x01 to grab a ledge!", AttackerName, Score, VictimName);
+			StatsPrintToChatAll("\x05%s \x01已获得 \x04%i \x01积分，因导致玩家 \x05%s\x01 挂边!", AttackerName, Score, VictimName);
 		}
 	}
 }
@@ -4618,12 +4618,12 @@ public Action:event_PlayerHurt(Handle event, const char[] name, bool dontBroadca
 //		Mode = GetConVarInt(cvar_AnnounceMode);
 //
 //		if (Mode == 1 || Mode == 2)
-//			StatsPrintToChat(Attacker, "You have \x03LOST \x04%i \x01points for \x03Friendly Firing \x05%s\x01!", Score, VictimName);
+//			StatsPrintToChat(Attacker, "你\x03丢失 \x04%i \x01积分，因  \x03黑枪 \x05%s\x01!", Score, VictimName);
 //		else if (Mode == 3)
 //		{
 //			char AttackerName[MAX_LINE_WIDTH];
 //			GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-//			StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for \x03Friendly Firing \x05%s\x01!", AttackerName, Score, VictimName);
+//			StatsPrintToChatAll("\x05%s \x01队友 \x03丢失 \x04%i \x01积分，因  \x03黑枪 \x05%s\x01!", AttackerName, Score, VictimName);
 //		}
 //
 //		return;
@@ -4741,11 +4741,11 @@ public Action:event_JockeyRelease(Handle event, const char[] name, bool dontBroa
 		if (Score > 0)
 		{
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Rescuer, "You have earned \x04%i \x01points for saving \x05%s \x01from \x04%s\x01!", Score, VictimName, JockeyName);
+				StatsPrintToChat(Rescuer, "你获得 \x04%i \x01积分，因\x05%s \x01保护\x04%s\x01!", Score, VictimName, JockeyName);
 			else if (Mode == 3)
 			{
 				GetClientName(Rescuer, RescuerName, sizeof(RescuerName));
-				StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for saving \x05%s \x01from \x04%s\x01!", RescuerName, Score, VictimName, JockeyName);
+				StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x01积分，因 \x05%s \x01保护 \x04%s\x01!", RescuerName, Score, VictimName, JockeyName);
 			}
 		}
 	}
@@ -4866,9 +4866,9 @@ public Action:event_ChargerKilled(Handle event, const char[] name, bool dontBroa
 		if (IsMatador)
 		{
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Killer, "You have earned \x04%i \x01points for \x04Leveling a Charge\x01!", Score);
+				StatsPrintToChat(Killer, "你已获得\x04%i \x01积分，因 \x04Leveling a Charge\x01!", Score);
 			else if (Mode == 3)
-				StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for \x04Leveling a Charge\x01!", KillerName, Score);
+				StatsPrintToChatAll("\x05%s \x01获得 \x04%i \x0积分，因 \x04Leveling a Charge\x01!", KillerName, Score);
 		}
 		else
 		{
@@ -4885,9 +4885,9 @@ public Action:event_ChargerKilled(Handle event, const char[] name, bool dontBroa
 				Format(VictimName, sizeof(VictimName), "a survivor");
 
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Killer, "You have earned \x04%i \x01points for saving %s from \x04%s\x01!", Score, VictimName, ChargerName);
+				StatsPrintToChat(Killer, "你已获得 \x04%i \x01积分，因 %s 保护 \x04%s\x01!", Score, VictimName, ChargerName);
 			else if (Mode == 3)
-				StatsPrintToChatAll("\x05%s \x01has earned \x04%i \x01points for saving %s from \x04%s\x01!", KillerName, Score, VictimName, ChargerName);
+				StatsPrintToChatAll("\x05%s \x01已获得 \x04%i \x01积分，因%s 保护 \x04%s\x01!", KillerName, Score, VictimName, ChargerName);
 		}
 	}
 }
